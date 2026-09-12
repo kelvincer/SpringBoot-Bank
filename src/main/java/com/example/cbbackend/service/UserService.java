@@ -18,6 +18,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TokenService tokenService;
+
     public ResponseEntity<Map<String, String>> validateUser(Login login) {
         Map<String, String> response = new HashMap<>();
 
@@ -28,7 +31,7 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
 
-        response.put("token", "token123");
+        response.put("token", tokenService.generateToken(login.getEmail()));
         response.put("message", "Autenticación correcta");
         return ResponseEntity.ok(response);
     }

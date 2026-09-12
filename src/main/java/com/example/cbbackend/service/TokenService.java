@@ -43,7 +43,7 @@ public class TokenService {
                 .compact();
     }
 
-    String extractIdentifier(String token) {
+    public String extractIdentifier(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()

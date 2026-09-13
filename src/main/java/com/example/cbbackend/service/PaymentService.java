@@ -89,4 +89,25 @@ public class PaymentService {
         response.put("payment", responsePay);
         return ResponseEntity.ok(response);
     }
+
+    public ResponseEntity<Map<String, Object>> getPayment(long id) {
+        Map<String, Object> response = new HashMap<>();
+
+        Payment payment = paymentRepository.findById(id).orElse(null);
+
+        if (payment == null) {
+            response.put("message", "No se encontró el pago");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        PayResponse responsePay = new PayResponse();
+        responsePay.setTitle(payment.getTitle());
+        responsePay.setIdentifier(payment.getIdentifier());
+        responsePay.setMonthlyFee(payment.getPaidAmount());
+        responsePay.setPaidDate(payment.getPayDate());
+        responsePay.setOperation("428343");
+
+        response.put("payment", responsePay);
+        return ResponseEntity.ok(response);
+    }
 }

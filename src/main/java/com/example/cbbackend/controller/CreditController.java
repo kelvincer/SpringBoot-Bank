@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +15,7 @@ import com.example.cbbackend.service.CreditService;
 import com.example.cbbackend.service.Service;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/credits")
 public class CreditController {
 
     @Autowired
@@ -32,6 +33,18 @@ public class CreditController {
         }
 
         return creditService.findUserCredits(token);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getCredit(
+            @RequestHeader("Authorization") String authorization,
+            @PathVariable long id) {
+        String token = authorization.replace("Bearer ", "");
+        ResponseEntity<Map<String, String>> validation = service.validateToken(token);
+        if (validation.getStatusCode() != HttpStatus.OK) {
+            return validation;
+        }
+        return creditService.getCredit(id);
     }
 
 }

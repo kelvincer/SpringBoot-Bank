@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -18,7 +19,7 @@ import com.example.cbbackend.service.Service;
 import com.example.cbbackend.service.TokenService;
 
 @RestController
-@RequestMapping("/payment")
+@RequestMapping("/payments")
 public class PaymentController {
 
     @Autowired
@@ -43,16 +44,16 @@ public class PaymentController {
         return paymentService.savePayment(pay, tokenService.extractIdentifier(token));
     }
 
-    @GetMapping("/payment")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getPayment(
             @RequestHeader("Authorization") String authorization,
-            Pay pay) {
+            @PathVariable long id) {
         String token = authorization.replace("Bearer ", "");
         ResponseEntity<Map<String, String>> validation = service.validateToken(token);
         if (validation.getStatusCode() != HttpStatus.OK) {
             return validation;
         }
 
-        return paymentService.getPayment(pay);
+        return paymentService.getPayment(id);
     }
 }
